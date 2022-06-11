@@ -2,15 +2,16 @@ import React from 'react';
 import styled from 'styled-components';
 
 const Container = styled.div`
+    display: flex;
+    flex-direction: column;
+    justify-content: center;
+    align-items: start;
+
     select{
         height: 40px;
         width: 300px;
         border-radius: 5px;
         padding: 10px;
-        display: flex;
-        flex-direction: column;
-        justify-content: center;
-        align-items: center;
     }    
 
 `

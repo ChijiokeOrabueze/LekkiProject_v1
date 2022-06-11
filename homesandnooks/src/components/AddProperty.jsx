@@ -96,6 +96,21 @@ class AddProperty extends Component {
 
     }
 
+    handleFileChange = (e) =>{
+        // this.setState({[e.target.name]: e.target.files});
+        // console.log("hello",e.target.files);
+
+        if (e.target.files) {
+            const fileArray = Array.from(e.target.files).map((file) => (
+                URL.createObjectURL(file)));
+
+            console.log(fileArray);
+        }
+
+        
+
+    }
+
     handleSubmit = (e) =>{
         e.preventDefault();
         const data = {...this.state}
@@ -119,7 +134,7 @@ class AddProperty extends Component {
         return (
             <Container style={{height: update ? "calc(100vh - 80px)": ""}}>
                 
-                <form onSubmit={this.handleSubmit}>
+                <form onSubmit={this.handleSubmit} encType = "multipart/form-data">
                     <h1 style={{margin: "10px 0"}}>{update? `Update Property ${propId}` : "Add New Property Details"}</h1>
                     <Wrapper>
                         {
@@ -146,7 +161,18 @@ class AddProperty extends Component {
                                                 value={this.state[p.name]}
                                                 handleChange={this.handleChange}
                                                 placeHolder={p.pHolder}/>
-                                }else{
+
+                                }else if (p.type === "file"){
+                                    return <Input 
+                                            key = {p.id}
+                                            title = {p.title}
+                                            name= {p.name}
+                                            type = {p.type}
+                                            // value = {this.state[p.name]}
+                                            handleChange = {this.handleFileChange}
+                                            /> 
+                                    
+                                }else {
                                     return <Input 
                                             key = {p.id}
                                             // width = "100px"
@@ -157,13 +183,13 @@ class AddProperty extends Component {
                                             placeholder= {p.pHolder}
                                             handleChange = {this.handleChange}
                                             />
+
                                 }
                             })
                         }
-
-                        {/* <input type="image" src="" alt="" /> */}
+                        {/* <input type="file" name="file" id="file" onChange={this.handleFileChange}/> */}
                     </Wrapper>
-                    <SubmitButton type="submit">- Add Property -</SubmitButton>
+                    <SubmitButton type="submit">- {update ? "Update": "Add"} Property -</SubmitButton>
                 </form>
             </Container>
         )
