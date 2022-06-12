@@ -1,21 +1,58 @@
+// const {dataUri} = require('../config/imageSaveConfig');
+// const {uploader} = require('../config/cloudinaryConfig');
 
 
 
 const PropertyController = (serviceContainer, helpers) =>{
     const addProperty = async (req, res) => {
         try{
-            console.log(req.body);
-            const property = await(serviceContainer.saveItem(req.body));
-            const response = helpers.constructResponse(property, "ok");
+           
+            const property = await serviceContainer.saveItem(req.body);
+            const response = helpers.constructResponse(property, "Property added successfully", "create");
             res.status(201).json(response);
         }catch(err){
             res.send({"error":err});
         }
     }
 
+    const addPropertyImage = async (req, res) => {
+        try{
+            // console.log(req.file);
+            const image = await serviceContainer.updateImageArray(req.body.id, req.file);
+            const response = helpers.constructResponse(image, "image uploaded succesfully");
+            res.status(200).json(response);
+        }catch(err){
+            res.send({"error": err});
+        }
+    }
+
+    const getProperty = async (req, res) => {
+        try{
+            const property = await serviceContainer.queryItem(req.params.id ? {_id: req.params.id} : req.query);
+            const response = helpers.constructResponse(property, "fetched all properties");
+            res.status(200).json(response);
+            
+        }catch (err){
+            res.send({"error": err});
+        }
+    }
+
+    const updateProperty = async (req, res) => {
+        try{
+            const updatedProperty = await serviceContainer.updateItem(req.params.id, req.body);
+            const response = helpers.constructResponse(updatedProperty, `property with id ${req.params.id} updated successfully`);
+            res.status(200).json(response);
+        }catch(err){
+            res.send({"error": err.message});
+        }
+    }
+
 
     return {
-        addProperty
+        addProperty,
+        addPropertyImage,
+        getProperty,
+        updateProperty
     }
 }
 

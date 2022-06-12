@@ -26,27 +26,29 @@ class Repo {
         }  
     }
 
-    findById = async (id) => {
+    findItemAndUpdateArray = async (id, itemToAdd) => {
         try{
-            const item = await this.Model.findById(id);
-            // if (!item){
-            //     throw "noItem";
-            // }
-            return item;
-        }catch (err){
+            const updatedItem = await this.Model.findByIdAndUpdate(id, 
+                {"$push": itemToAdd},
+                {"new": true});
+
+            return updatedItem;
+        }catch(err){
             throw err;
         }
     }
 
-    // update = async (item, updates) =>{
-    //     try{ 
-    //         item[update[0]] = update[1];
-    //         const updatedUser = await Model.save();          
-    //         return updatedUser;
-    //     }catch (err) {
-    //         throw err
-    //     }
-    // }
+    update = async (id, updates) =>{
+        try{ 
+            const updatedUser = await this.Model.findByIdAndUpdate(id, 
+                {"$set": updates},
+                {"new": true});  
+
+            return updatedUser;
+        }catch (err) {
+            throw err
+        }
+    }
 }
 
 module.exports = Repo;
