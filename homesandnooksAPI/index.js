@@ -5,8 +5,8 @@ const express = require('express'),
 const PORT = process.env.PORT || 8080;
 const mongoose = require('mongoose');
 const bodyParser = require('body-parser');
+const cors = require('cors');
 const {upload} = require('./config/imageSaveConfig');
-// const {cloudinaryConfig} = require('./config/cloudinaryConfig');
 const propertyRouteHandler = require('./routes/propertyRouteHandler')
 
 
@@ -18,6 +18,9 @@ app.use(express.json());
 app.use(bodyParser.json());
 app.use(bodyParser.urlencoded({extended: true}));
 app.use(upload);
+app.use(cors({
+    origin: "http://localhost:3000"
+}));
 
 
 app.use('/api/v1/lekki', propertyRouteHandler);

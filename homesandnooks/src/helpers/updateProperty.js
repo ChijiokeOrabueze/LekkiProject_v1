@@ -1,35 +1,35 @@
 const updateDetails = [
     {
         id: 1,
-        name: "noBd",
+        name: "bedroom",
         title: "No. of Bedrooms",
         type: "number",
         pHolder: "",
     },
     {
         id: 2,
-        name: "noS",
+        name: "sittingRoom",
         title: "No. of Sitting Rooms",
         type: "number",
         pHolder: "",
     },
     {
         id: 3,
-        name: "noK",
+        name: "kitchen",
         title: "No. of Kitchens",
         type: "number",
         pHolder: "",
     },
     {
         id: 4,
-        name: "noT",
+        name: "toilet",
         title: "No. of Toilets",
         type: "number",
         pHolder: "",
     },
     {
         id: 5,
-        name: "noB",
+        name: "bathroom",
         title: "No. of Bathrooms",
         type: "number",
         pHolder: "",
@@ -43,18 +43,18 @@ const updateDetails = [
     },
     {
         id: 7,
-        name: "desc",
+        name: "description",
         title: "Description",
         type: "text",
         pHolder: "Describe the property",
     },
-    {
-        id: 8,
-        name: "unique",
-        title: "Property Unique Id",
-        type: "text",
-        pHolder: "Enter the unique id of the property",
-    }
+    // {
+    //     id: 8,
+    //     name: "unique",
+    //     title: "Property Unique Id",
+    //     type: "text",
+    //     pHolder: "Enter the unique id of the property",
+    // }
 ]
 
 export default updateDetails;

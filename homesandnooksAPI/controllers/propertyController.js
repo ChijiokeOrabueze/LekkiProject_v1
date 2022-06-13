@@ -28,7 +28,7 @@ const PropertyController = (serviceContainer, helpers) =>{
 
     const getProperty = async (req, res) => {
         try{
-            const property = await serviceContainer.queryItem(req.params.id ? {_id: req.params.id} : req.query);
+            const property = await serviceContainer.queryItem(req.params, req.query);
             const response = helpers.constructResponse(property, "fetched all properties");
             res.status(200).json(response);
             
@@ -39,6 +39,7 @@ const PropertyController = (serviceContainer, helpers) =>{
 
     const updateProperty = async (req, res) => {
         try{
+            console.log("here ", req.params.id, req.body)
             const updatedProperty = await serviceContainer.updateItem(req.params.id, req.body);
             const response = helpers.constructResponse(updatedProperty, `property with id ${req.params.id} updated successfully`);
             res.status(200).json(response);

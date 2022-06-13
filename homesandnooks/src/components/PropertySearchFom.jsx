@@ -5,6 +5,8 @@ import Select from "./Select";
 
 
 
+
+
 const Container = styled.div`
     width: 100vw;
     // height: 80px;
@@ -62,32 +64,53 @@ const PropertySearchFom = (props) => {
     const [min, setMin] = useState("");
     const [max, setMax] = useState("");
 
+    
+
+
 
     const handleSubmit = (e) =>{
         e.preventDefault();
-        const data = {
-            address,
-            aSearch,
-            type,
-            owner,
-            bed,
+        // console.log(process.env.REACT_APP_GET_PROPERTY_QUERY_URL)
+        
+        const params = {
+            address: address === "Any" ? "": address,
+            type: type === "Any" ? "": type,
+            propertyOwner:owner === "Any" ? "": owner,
+            bedroom:bed === "Any" ? "": bed,
             min,
             max
         }
+        
 
-        console.log(data);
+        // Object.keys(params).forEach((key) => {
+        //     url+=
+        // })
+        
+        // console.log(url);
+        props.formSubmit(params);
+
+    }
+
+    const raw = {
+        address:"",
+        type: "",
+        propertyOwner:"",
+        bedroom:"",
+        min: "",
+        max: ""
     }
   return (
     <Container>
         <form onSubmit={handleSubmit} className={aSearch ? "a-form" : ""}>
-            <Select 
+            <Input 
                 title = {aSearch ? "Address" : ""}
                 width = {aSearch && "100px"}
                 name="address"
+                type = "text"
                 value = {address}
-                placeholder= {aSearch? "Any": "Select a property address to search"}
+                placeholder= {aSearch? "Any": "Enter a property address to search"}
                 handleChange = {(e)=>{setAddress(e.target.value)}}
-                options = {["hello", "star"]}/>
+                />
 
             {
                 aSearch === true &&
@@ -98,19 +121,20 @@ const PropertySearchFom = (props) => {
                         title =  "Type"
                         name="Type"
                         value = {type}
-                        placeholder= "Any"
+                        // placeholder= ""
                         handleChange = {(e)=>{setType(e.target.value)}}
-                        options = {["hello", "star"]}/>,
+                        options = {["Any","Residential", "Duplex", "Commercial", "Flat"]}/>,
 
-                    <Select 
+                    <Input 
                         key = "4"
                         width = "100px"
                         title = "Owner" 
                         name="owner"
+                        type = "text"
                         value = {owner}
                         placeholder= "Any"
                         handleChange = {(e)=>{setOwner(e.target.value)}}
-                        options = {["hello", "star"]}/>,
+                        />,
 
                     <Select 
                         key = "5"
@@ -118,9 +142,9 @@ const PropertySearchFom = (props) => {
                         title = "Bedrooms" 
                         name="bed"
                         value = {bed}
-                        placeholder= "Any"
+                        // placeholder= "Any"
                         handleChange = {(e)=>{setBed(e.target.value)}}
-                        options = {["hello", "star"]}/>,
+                        options = {["Any","0", "1", "2", "3", "4"]}/>,
 
                     <Input 
                         key = "6"
@@ -150,7 +174,7 @@ const PropertySearchFom = (props) => {
                 !aSearch &&
                 <AButton onClick={()=>setaSearch(true)}>- Advanced Search -</AButton>
             }
-            
+            <button type="button" onClick={() => props.formSubmit(raw)}>All Properties</button>
         </form>
     </Container>
   )

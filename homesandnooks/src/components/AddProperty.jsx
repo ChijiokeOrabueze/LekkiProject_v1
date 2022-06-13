@@ -5,6 +5,8 @@ import Select from './Select';
 import Input from './Input';
 import TextArea from './TextArea';
 import updateDetails from '../helpers/updateProperty';
+import fetchData from '../helpers/fetchData';
+import imageUpload from '../helpers/imageUpload';
 
 const Container = styled.div`
     width: 100vw;
@@ -67,25 +69,42 @@ const SubmitButton = styled.button`
 
 `
 
+const MsgDisplay = styled.div`
+    position: fixed;
+    top: 10px;
+    right: 0;
+    height: 100px;
+    width: 300px;
+    background-color: #f4f4f4;
+    border-top-left-radius: 8px;
+    border-bottom-left-radius: 8px;
+    padding: 10px;
+    display: flex;
+    justify-content: center;
+    align-items: center;
+
+`
+
 class AddProperty extends Component {
     constructor (props){
         super(props);
         this.state = {
-            pAddress: "",
-            pType: "",
-            noBd: "",
-            noS: "",
-            noK: "",
-            noT: "",
-            noB: "",
-            pOwner: "",
-            pImage: "",
+            address: "",
+            type: "",
+            bedroom: "",
+            sittingRoom: "",
+            kitchen: "",
+            toilet: "",
+            bathroom: "",
+            propertyOwner: "",
+            image: "",
             validFrom: "",
             validTo: "",
             price: "",
-            desc: "",
-            unique: ""
+            description: "",
+            error: ""
         }
+   
 
         
     }
@@ -97,32 +116,88 @@ class AddProperty extends Component {
     }
 
     handleFileChange = (e) =>{
-        // this.setState({[e.target.name]: e.target.files});
-        // console.log("hello",e.target.files);
-
-        if (e.target.files) {
-            const fileArray = Array.from(e.target.files).map((file) => (
-                URL.createObjectURL(file)));
-
-            console.log(fileArray);
-        }
-
+        this.setState({image: e.target.files[0]});
         
 
+        // if (e.target.files) {
+        //     const fileArray = Array.from(e.target.files).map((file) => (
+        //         URL.createObjectURL(file)));
+
+        //     console.log(fileArray);
+        // }
     }
 
-    handleSubmit = (e) =>{
-        e.preventDefault();
-        const data = {...this.state}
-
-        console.log(data);
-    }
-
-    componentDidMount() {
-        if (this.props.update) {
-            this.setState({...this.props.propData});
+    handleResponse = (data) =>{
+        if (data === "err"){
+            this.setState({error: "An error occured, please check your internet connection and try again"});
+        } else if (data.error){
+            console.log("error",data.error);
+            if (data.error._message && data.error._message === "Property validation failed"){
+                this.setState({error: "All form fields apart from the image are required."});
+            }else if (data.error.message){
+                this.setState({error: data.error.message});
+            }else{
+                this.setState({error: "An error occured while processing your request. Check your internet connection and try again"});
+            }
+            
+        } else if (data.status === "success") {
+            this.setState({error: ""});
+            console.log(data.message);
+            return {
+                status: "success",
+                data: data.message,
+                id: data.data._id || null
+            } 
+        }else{
+            console.log(data);
         }
     }
+
+    handleSubmit = async (e) =>{
+        e.preventDefault();
+        this.setState({error: "loading... please wait"});
+        let url = process.env.REACT_APP_ADD_PROPERTY_URL;
+        let method = "post";
+        let {image, error, ...others} = this.state;
+        if (this.props.update){
+            delete others.address;
+            delete others.validFrom;
+            delete others.price;
+            delete others.type;
+            delete others.propertyOwner;
+
+            // console.log(others);
+            url = process.env.REACT_APP_GET_PROPERTY_BASE_URL + `${this.props.propId}`;
+            method = "put"
+        }
+        console.log(others);
+        const response = await fetchData(method, url, others)
+        .then(this.handleResponse);
+
+        if (response && response.status === "success") {
+            if (!this.props.update && this.state.image !== "") {
+                const newResponse = await imageUpload(this.state.image, 
+                    process.env.REACT_APP_UPLOAD_IMAGE_URL, 
+                    response.id)
+                    .then(this.handleResponse);
+    
+                if (newResponse && newResponse.status === "success"){
+                    this.setState({error: response.data});
+                }
+            }else if (this.props.update) {
+                this.setState({error: response.data})
+            }
+            
+        }
+
+    
+    }
+
+    // componentDidMount() {
+    //     if (this.props.update) {
+    //         this.setState({...this.props.propData});
+    //     }
+    // }
 
     
 
@@ -148,7 +223,7 @@ class AddProperty extends Component {
                                                 value = {this.state[p.name]}
                                                 placeholder= {p.pHolder}
                                                 handleChange = {this.handleChange}
-                                                options = {["hello", "star"]}/>
+                                                options = {["Residential", "Duplex", "Commercial", "Flat"]}/>
 
                                     
                                 } else if (p.type === "textarea"){
@@ -179,6 +254,7 @@ class AddProperty extends Component {
                                             title = {p.title}
                                             name= {p.name}
                                             type = {p.type}
+                                            max = {4}
                                             value = {this.state[p.name]}
                                             placeholder= {p.pHolder}
                                             handleChange = {this.handleChange}
@@ -187,10 +263,12 @@ class AddProperty extends Component {
                                 }
                             })
                         }
-                        {/* <input type="file" name="file" id="file" onChange={this.handleFileChange}/> */}
                     </Wrapper>
                     <SubmitButton type="submit">- {update ? "Update": "Add"} Property -</SubmitButton>
                 </form>
+                <MsgDisplay style = {{display: this.state.error === "" ? "none": "flex"}}>
+                    <p style={{color: "red"}}>{this.state.error}</p>
+                </MsgDisplay>
             </Container>
         )
     }

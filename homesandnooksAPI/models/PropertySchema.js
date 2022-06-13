@@ -4,6 +4,7 @@ const mongoose = require('mongoose');
 const PropertySchema = new mongoose.Schema({
     address: {type: String, required: true},
     type: {type: String, required: true},
+    price: {type: Number, required: true},
     bedroom: {type: Number, required: true},
     sittingRoom: {type: Number, required: true},
     kitchen: {type: Number, required: true},

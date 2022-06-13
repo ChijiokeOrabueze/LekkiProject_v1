@@ -19,7 +19,7 @@ const Container = styled.div`
 `
 
 const Input = (props) =>{
-    const {title, name, width, type, value, placeholder, handleChange,} = props;
+    const {title, name, width, type, value, placeholder, handleChange,max} = props;
     return(
         <Container>
             <label htmlFor={name}>{title}</label>
@@ -31,9 +31,8 @@ const Input = (props) =>{
                 placeholder={placeholder}
                 name={name}
                 onChange={handleChange}
-                min = {type === "number" ? 1 : null}
-                max = {type === "number" ? 4 : null}
-                multiple = {type === "file" ? true: null}
+                min = {type === "number"? 0 : null}
+                max = {max}
                 accept = {type === "file"? "image/png, image/jpeg, image/jpg": null}
                      />
                 

@@ -29,7 +29,7 @@ const Select = (props) =>{
                 style = {{width: width}}>
 
 
-                    <option value="" disabled>{placeholder}</option>
+                    {placeholder && <option value="" disabled>{placeholder}</option>}
                     {props.options.map((value)=>{
                         return(
                             <option key={value} value={value} label={value}>{value}</option>

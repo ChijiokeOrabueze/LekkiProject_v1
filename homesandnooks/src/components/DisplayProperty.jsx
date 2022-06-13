@@ -1,6 +1,8 @@
 import  styled  from "styled-components";
-import { useNavigate } from "react-router-dom";
+import { useLocation, useNavigate } from "react-router-dom";
 import { useState } from "react";
+import Input from "./Input";
+import imageUpload from "../helpers/imageUpload";
 
 
 
@@ -86,11 +88,85 @@ const Sub = styled.div`
 
 `
 
+const Form = styled.form`
+    display: flex;
+    border: 1px solid brown;
+
+`
+
+const MsgDisplay = styled.div`
+    position: fixed;
+    top: 10px;
+    right: 0;
+    height: 100px;
+    width: 300px;
+    background-color: #f4f4f4;
+    border-top-left-radius: 8px;
+    border-bottom-left-radius: 8px;
+    padding: 10px;
+    display: flex;
+    justify-content: center;
+    align-items: center;
+
+`
+
 
 
 const DisplayProperty = () => {
     const navigate = useNavigate();
-    const [itemId, setId] = useState(1);
+    const location = useLocation();
+    // const [itemId, setId] = useState(1);
+    const [image, setImage] = useState("");
+    const [error, setError] = useState("");
+
+    const propertyData = location.state.data;
+
+
+    const handleResponse = (data) =>{
+        if (data === "err"){
+            setError("An error occured, please check your internet connection and try again");
+        } else if (data.error){
+            console.log("error",data.error);
+            if (data.error.message){
+                setError(data.error.message);
+            }else{
+                setError("An error occured while processing your request. Check your internet connection and try again");
+            }
+            
+        } else if (data.status === "success") {
+            setError("");
+            console.log(data.message);
+            return {
+                status: "success",
+                data: data.message,
+                id: data.data._id || null
+            } 
+        }else{
+            console.log(data);
+        }
+    }
+
+    const handleFileChange = (e) => {
+        setImage(e.target.files[0]);
+    }
+
+    const handleSubmit = async (e) => {
+        e.preventDefault();
+        setError("Uploading Image...");
+        if (image !== "") {
+            const response = await imageUpload(image, 
+                "http://localhost:8000/api/v1/lekki/upload", 
+                propertyData._id)
+                .then(handleResponse);
+    
+            if (response && response.status === "success"){
+                setError(response.data);
+            }
+        } else {
+            setError('no file added');
+        }
+        
+    }
 
 
   return (
@@ -98,49 +174,58 @@ const DisplayProperty = () => {
     <Container>
         <Heading>
             <div>
-                <div><p>Uploaded by:</p><h4> Uju Chima</h4></div>
-                <div><p>Property Owner:</p><h4> Mr. Mark Taiwo</h4></div>
+                <div><p>Uploaded by:</p><h4> {propertyData.propertyOwner}</h4></div>
+                <div><p>Property Owner:</p><h4> {propertyData.propertyOwner}</h4></div>
             </div>
-            <UpdateButton type="button" onClick={()=> navigate('/update_property', {state: {id:itemId}})}>Update Property</UpdateButton>
+            <UpdateButton type="button" onClick={()=> navigate('/update_property', {state: {id:propertyData._id, propertyData}})}>Update Property</UpdateButton>
+            <Form onSubmit = {handleSubmit}>
+                <Input 
+                    name= 'image'
+                    type = 'file'
+                    handleChange = {handleFileChange}
+                    />
+                <input type='submit' value='upload'/>
+            </Form>
         </Heading>
         <ImageContainer>
             <div>
-                <Slide><Image src="images/che.webp" alt="test"/></Slide>
-                <Slide><Image src="images/che.webp" alt="test"/></Slide>
-                <Slide><Image src="images/che.webp" alt="test"/></Slide>
-                <Slide><Image src="images/che.webp" alt="test"/></Slide>
-                <Slide><Image src="images/white-and-brown-house.jpg" alt="test"/></Slide>
-                <Slide><Image src="images/che.webp" alt="test"/></Slide>
+                {
+                    propertyData.images.length > 0 ?
+                    propertyData.images.map((im, ind) =>{
+                        return <Slide key={`item${ind}`}><Image src={im.path} alt={`item${ind}`}/></Slide>
+                    }) :
+                    <Slide><Image src="images/che.webp" alt="test"/></Slide>
+                }
             </div> 
         </ImageContainer>
-        <h2>N500000</h2>
+        <h2>{propertyData.price}</h2>
         <Details>
-            <div><h4>5</h4><p> Bedrooms</p></div>
-            <div><h4>3</h4><p> Sitting Rooms</p></div>
-            <div><h4>2</h4><p> kitchen</p></div>
-            <div><h4>4</h4><p> Bathrooms</p></div>
-            <div><h4>2</h4><p> Toilets</p></div>
+            <div><h4>{propertyData.bedroom}</h4><p> Bedrooms</p></div>
+            <div><h4>{propertyData.sittingRoom}</h4><p> Sitting Rooms</p></div>
+            <div><h4>{propertyData.kitchen}</h4><p> kitchen</p></div>
+            <div><h4>{propertyData.bathroom}</h4><p> Bathrooms</p></div>
+            <div><h4>{propertyData.toilet}</h4><p> Toilets</p></div>
         </Details>
-        <h3 style={{margin: "10px 0"}}>4, Abiodun street, Lagos</h3>
+        <h3 style={{margin: "10px 0"}}>{propertyData.address}</h3>
         <Sub>
             <div className="first">
                 <div>
-                    <h4>Apartment</h4>
+                    <h4>{propertyData.type}</h4>
                     <p>Property Type</p>
                 </div>
 
                 <div>
-                    <h4>Mr. Mike</h4>
+                    <h4>{propertyData.propertyOwner}</h4>
                     <p>Property Owner</p>
                 </div>
             </div>
             <div className="second">
                 <div>
-                    <h4>23/04/20</h4>
+                    <h4>{propertyData.validFrom}</h4>
                     <p>Valid From</p>
                 </div>
                 <div>
-                    <h4>23/09/20</h4>
+                    <h4>{propertyData.validTo}</h4>
                     <p>Valid To</p>
                 </div>
             </div>
@@ -149,7 +234,9 @@ const DisplayProperty = () => {
         </Sub>
 
 
-        
+        <MsgDisplay style = {{display: error === "" ? "none": "flex"}}>
+            <p style={{color: "red"}}>{error}</p>
+        </MsgDisplay>
       
     </Container>
   )

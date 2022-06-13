@@ -27,9 +27,30 @@ const Service = (targetRepo) =>{
         
     }
 
-    const queryItem = async (params) => {
+    const queryItem = async (params, queries) => {
+        let foundItems = [];
         try{
-            const foundItems = await repository.filter(params);
+            if (params.id) {
+                // return ["params", params]
+                console.log("params", params);
+                foundItems = await repository.filter({_id: params.id});
+            }else if (Object.keys(queries).length === 0) {
+                // return ["all", queries]
+                console.log("all", queries);
+                foundItems = await repository.filter(queries);
+            }else {
+                Object.keys(queries).forEach(q => {
+                    queries[q].trim() === "" && delete queries[q];
+                });
+                if (Object.keys(queries).length === 0){
+                    console.log("all", queries);
+                    foundItems = await repository.filter(queries);
+                }else {
+                    console.log("q", queries);
+                    foundItems = await repository.search(queries);
+                }
+                
+            }
             return foundItems;
         }catch(err){
             throw err;
@@ -40,6 +61,7 @@ const Service = (targetRepo) =>{
         const arr = ["bedroom", "sittingRoom", "kitchen", "bathroom", "toilet", "description", "validTo"];
         Object.keys(updates).forEach(u => {
             !arr.includes(u) && delete updates[u];
+            updates[u].trim() === "" && delete updates[u];
         });
         console.log(updates);
         try{

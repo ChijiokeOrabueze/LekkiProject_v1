@@ -1,4 +1,4 @@
-import { Link } from "react-router-dom";
+import { Link, useNavigate } from "react-router-dom";
 import  styled  from "styled-components";
 
 
@@ -13,9 +13,16 @@ const Container = styled.div`
     gap: 10px;
     flex-basis: 290px;
     border: 1px solid silver;
+    @media (max-width: 965px) {
+        flex-basis: 400px;
+    }
 
     @media (max-width: 900px) {
         flex-basis: 350px;
+    }
+
+    @media (max-width: 778px) {
+        flex-basis: 500px;
     }
 
     @media (max-width: 700px) {
@@ -29,8 +36,38 @@ const Image = styled.img`
     width: 290px;
     border-radius: 5px;
 
+    @media (max-width: 778px) {
+        width: 450px;
+    }
+
     @media (max-width: 900px) {
         width: 300px;
+    }
+
+    @media (max-width: 965px) {
+        width: 350px;
+    }
+
+`
+
+const ImageReplace = styled.div`
+    height: 200px;
+    width: 290px;
+    border-radius: 5px;
+    display: flex;
+    justify-content: center;
+    align-items: center;
+
+    @media (max-width: 778px) {
+        width: 450px;
+    }
+
+    @media (max-width: 900px) {
+        width: 300px;
+    }
+
+    @media (max-width: 965px) {
+        width: 350px;
     }
 
 `
@@ -53,14 +90,23 @@ const Button = styled.button`
 
 
 const Property = (props) => {
-    const {title, desc, loc, img} = props;
+    const {title, desc, loc, img, data} = props;
+    const navigate = useNavigate();
+
+    const handleClick = () => {
+        navigate("/property", {
+            state: {
+                data
+            }
+        });
+    }
   return (
     <Container>
         <h4>{title}</h4>
-        <Image src={`images/${img}`} alt = {img}/>
+        {img !== "" ? <Image src={img} alt = {img}/>: <ImageReplace><p>no image</p></ImageReplace>}
         <Description>{desc}</Description>
         <h5>{loc}</h5>
-        <Link to="/property"><Button>- view listing -</Button></Link>
+        <Button onClick= {handleClick}>- view listing -</Button>
     </Container>
   )
 }
