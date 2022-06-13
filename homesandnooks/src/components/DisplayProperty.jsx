@@ -12,6 +12,11 @@ const Container = styled.div`
     p,h4{
         display: inline;
     }
+    @media (max-width: 515px) {
+        padding: 15px 5px;
+         
+    }
+    
 
 `
 const Heading = styled.div`
@@ -19,12 +24,23 @@ const Heading = styled.div`
     width: 100vw;
     justify-content: start;
 
+    .header {
+        @media (max-width: 716px) {
+            display: none;
+             
+        }
+    }
+
 `
 
 const UpdateButton = styled.button`
     background-color: teal;
     color: white;
     margin-left: 20px;
+    @media (max-width: 716px) {
+        margin-left: 0;
+         
+    }
 
 `
 
@@ -92,6 +108,14 @@ const Form = styled.form`
     display: flex;
     border: 1px solid brown;
 
+    @media (max-width: 490px) {
+        justify-content: start;
+        
+         
+    }
+
+    
+
 `
 
 const MsgDisplay = styled.div`
@@ -155,7 +179,7 @@ const DisplayProperty = () => {
         setError("Uploading Image...");
         if (image !== "") {
             const response = await imageUpload(image, 
-                "http://localhost:8000/api/v1/lekki/upload", 
+                process.env.REACT_APP_UPLOAD_IMAGE_URL, 
                 propertyData._id)
                 .then(handleResponse);
     
@@ -173,7 +197,7 @@ const DisplayProperty = () => {
       
     <Container>
         <Heading>
-            <div>
+            <div className="header">
                 <div><p>Uploaded by:</p><h4> {propertyData.propertyOwner}</h4></div>
                 <div><p>Property Owner:</p><h4> {propertyData.propertyOwner}</h4></div>
             </div>

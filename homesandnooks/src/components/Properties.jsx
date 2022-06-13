@@ -83,6 +83,7 @@ const Properties = () => {
     }, [all]);
 
     const formSubmit = async (params) => {
+        setError("Searching...");
         let url = new URL(process.env.REACT_APP_GET_PROPERTY_QUERY_URL);
 
         console.log(params);
@@ -99,6 +100,7 @@ const Properties = () => {
                 setError("No item matches your search");
             }else {
                 setProperties(response.data);
+                setError("");
             }
         }
         

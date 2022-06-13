@@ -1,6 +1,11 @@
 import styled from 'styled-components';
 
 const Container = styled.div`
+    display: flex;
+    flex-direction: column;
+    justify-content: center;
+    align-items: start;
+    height: 150px;
 
     textarea{
         height: 150px;

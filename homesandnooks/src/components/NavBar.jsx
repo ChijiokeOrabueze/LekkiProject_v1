@@ -12,9 +12,12 @@ const Container = styled.div`
     justify-content: center;
     align-items: center;
 
+
     a{
         color: #a9a9a9; 
     }
+
+    
 
 `
 
@@ -25,6 +28,10 @@ const Wrapper = styled.div`
     display: flex;
     justify-content: space-between;
     align-items: center;
+
+    @media (max-width: 826px) {
+        margin: 0 20px;
+    }
 
 `
 const Logo = styled.h1`
@@ -42,6 +49,14 @@ const NavLinks = styled.div`
     li{
         margin-left: 60px;
         cursor: pointer;
+
+        @media (max-width: 826px) {
+            margin-left:30px;
+        }
+    }
+
+    @media (max-width: 639px) {
+        display: none;
     }
 
 `
@@ -53,8 +68,8 @@ const NavBar = () => {
             <Link to="/"><Logo>HOMESandNOOKS</Logo></Link>
             <NavLinks>
                 <Link to="/"><li>Home</li></Link>
-                <li>About Us</li>
-                <li>Sign Up</li>
+                <li>AboutUs</li>
+                <li>SignUp</li>
                 <li>Login</li>
             </NavLinks>
 

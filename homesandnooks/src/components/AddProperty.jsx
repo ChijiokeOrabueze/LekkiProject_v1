@@ -35,9 +35,46 @@ const Container = styled.div`
         margin: 30px 0;
         padding: 10px
 
+    }
+
+    @media (max-width: 800px) {
+        form{
+            margin:10;
+            // padding: 0;
+            width: 100%;
+            border: none;
+            
+
+            h1{
+                font-size: 20px;
+            }
 
         
+        }
 
+    @media (max-width: 639px) {
+        form{
+            
+            div{
+                width: 100% !important;
+                justify-content: center !important;
+
+                input, select, textarea{
+                    width: 80% !important;
+                    justify-self: center;
+                    align-self: center;
+                }
+
+                label{
+                    justify-self: center;
+                    align-self: center;
+                }
+            }
+
+        
+        }
+        
+         
     }
 `
 

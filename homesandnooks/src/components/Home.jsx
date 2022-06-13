@@ -33,6 +33,10 @@ const Body = styled.div`
 
     h1{
         font-weight: 100;
+        @media (max-width: 620px) {
+            font-size: 20px;
+         
+        }
     }
 
     span{
