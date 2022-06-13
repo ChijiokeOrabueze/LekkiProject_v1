@@ -28,7 +28,6 @@ class Repo {
 
     search = async (queries) => {
         const {min, max, ...others} = queries;
-        console.log(max);
         try{
             const items = await this.Model.find(others).where("price").gte(min || 0).lte(max || Infinity);
             return items

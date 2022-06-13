@@ -12,7 +12,7 @@ const UpdateProperty = () => {
     <AddProperty 
         update = {true}
         propId = {id}
-        propData = {location.state.propertyData}/>
+        />
   )
 }
 

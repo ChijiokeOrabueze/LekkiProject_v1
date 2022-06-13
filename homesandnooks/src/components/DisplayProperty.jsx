@@ -201,7 +201,7 @@ const DisplayProperty = () => {
                 <div><p>Uploaded by:</p><h4> {propertyData.propertyOwner}</h4></div>
                 <div><p>Property Owner:</p><h4> {propertyData.propertyOwner}</h4></div>
             </div>
-            <UpdateButton type="button" onClick={()=> navigate('/update_property', {state: {id:propertyData._id, propertyData}})}>Update Property</UpdateButton>
+            <UpdateButton type="button" onClick={()=> navigate('/update_property', {state: {id:propertyData._id}})}>Update Property</UpdateButton>
             <Form onSubmit = {handleSubmit}>
                 <Input 
                     name= 'image'

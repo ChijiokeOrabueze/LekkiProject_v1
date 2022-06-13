@@ -148,7 +148,7 @@ class AddProperty extends Component {
 
     handleChange = (e) =>{
         this.setState({[e.target.name]: e.target.value});
-        // console.log(e.target.name, e.target);
+        
 
     }
 
@@ -203,11 +203,11 @@ class AddProperty extends Component {
             delete others.type;
             delete others.propertyOwner;
 
-            // console.log(others);
+       
             url = process.env.REACT_APP_GET_PROPERTY_BASE_URL + `${this.props.propId}`;
             method = "put"
         }
-        console.log(others);
+
         const response = await fetchData(method, url, others)
         .then(this.handleResponse);
 
@@ -240,7 +240,7 @@ class AddProperty extends Component {
 
     
     render() {
-        const {propId, propData, update} = this.props;
+        const {propId, update} = this.props;
         const details = update ? updateDetails :  propertyDetails;
         
         return (

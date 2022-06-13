@@ -31,22 +31,20 @@ const Service = (targetRepo) =>{
         let foundItems = [];
         try{
             if (params.id) {
-                // return ["params", params]
-                console.log("params", params);
+                // console.log("params", params);
                 foundItems = await repository.filter({_id: params.id});
             }else if (Object.keys(queries).length === 0) {
-                // return ["all", queries]
-                console.log("all", queries);
+                // console.log("all", queries);
                 foundItems = await repository.filter(queries);
             }else {
                 Object.keys(queries).forEach(q => {
                     queries[q].trim() === "" && delete queries[q];
                 });
                 if (Object.keys(queries).length === 0){
-                    console.log("all", queries);
+                    // console.log("all", queries);
                     foundItems = await repository.filter(queries);
                 }else {
-                    console.log("q", queries);
+                    // console.log("q", queries);
                     foundItems = await repository.search(queries);
                 }
                 

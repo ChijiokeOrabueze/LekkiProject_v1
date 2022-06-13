@@ -70,7 +70,6 @@ const PropertySearchFom = (props) => {
 
     const handleSubmit = (e) =>{
         e.preventDefault();
-        // console.log(process.env.REACT_APP_GET_PROPERTY_QUERY_URL)
         
         const params = {
             address: address === "Any" ? "": address,
@@ -81,12 +80,6 @@ const PropertySearchFom = (props) => {
             max
         }
         
-
-        // Object.keys(params).forEach((key) => {
-        //     url+=
-        // })
-        
-        // console.log(url);
         props.formSubmit(params);
 
     }

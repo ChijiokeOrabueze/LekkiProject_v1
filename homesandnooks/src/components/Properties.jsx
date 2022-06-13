@@ -17,24 +17,6 @@ const Container = styled.div`
 
 `
 
-const Left = styled.div`
-    width: 100vw;
-    height: 100vh;
-    // background-color: red;
-    flex:2;
-    text-align: center;
-    overflow: hidden;
-
-    h1{
-        // border: 1px solid coral;
-        // background-color: rgb(51, 51, 51);
-        color: rgb(51, 51, 51);
-        font-weight: 100;
-    }
-
-
-`
-
 const Wrapper = styled.div`
     width: 100%;
     // height: calc(100vh - 40px);
@@ -68,7 +50,6 @@ const MsgDisplay = styled.div`
 const Properties = () => {
     const [properties, setProperties] = useState([]);
     const [error, setError] = useState("");
-    const [all, setAll] = useState(false);
 
     useEffect(()=>{
         const func = async () => {
@@ -80,20 +61,19 @@ const Properties = () => {
         }
         func();
         
-    }, [all]);
+    }, []);
 
     const formSubmit = async (params) => {
         setError("Searching...");
         let url = new URL(process.env.REACT_APP_GET_PROPERTY_QUERY_URL);
 
-        console.log(params);
         Object.keys(params).forEach((key) => {
             url.searchParams.append(key, params[key]);
         });
 
         const response = await fetchData("get", url, {})
             .then(handleResponse);
-        console.log(response);
+
         if (response && response.status === "success"){
             // console.log(response.data);
             if (response.data.length === 0) {
@@ -110,11 +90,9 @@ const Properties = () => {
         if (data === "err"){
             setError("Please check your internet connection and refresh page");
         } else if (data.error){
-            console.log("error",data.error);
             if (data.error.message){
                 setError(data.error.message);
             }else{
-                console.log(data.error)
                 setError("Check your internet connection and refresh page");
             }
             
@@ -143,7 +121,7 @@ const Properties = () => {
     }
   return (
     <Container>
-        <PropertySearchFom formSubmit = {formSubmit} seeAll = {()=>setAll(true)}/>
+        <PropertySearchFom formSubmit = {formSubmit}/>
         <h1>Property Listing</h1>
         <Wrapper>
             {output}
